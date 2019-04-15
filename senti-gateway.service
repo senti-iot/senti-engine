@@ -1,0 +1,21 @@
+[Unit]
+# senti-gateway.service
+Description=Senti Gateway
+Documentation=https://github.com/senti-iot/senti-gateway/blob/master/README.md
+# After=network.target
+
+[Service]
+WorkingDirectory=/srv/nodejs/senti/services/gateway/production
+ExecStart=/usr/bin/node server.js
+Environment=NODE_PORT=3007
+Environment=NODE_ENV=production
+Type=simple
+Restart=always
+# RestartSec=1
+StartLimitInterval=0
+User=root
+Group=root
+# KillSignal=SIGQUIT
+
+[Install]
+WantedBy=basic.target
