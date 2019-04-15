@@ -1,13 +1,13 @@
 [Unit]
-# senti-gateway.service
-Description=Senti Gateway
-Documentation=https://github.com/senti-iot/senti-gateway/blob/master/README.md
+# senti-engine.service
+Description=Senti Engine
+Documentation=https://github.com/senti-iot/senti-engine/blob/master/README.md
 # After=network.target
 
 [Service]
-WorkingDirectory=/srv/nodejs/senti/services/gateway/production
+WorkingDirectory=/srv/nodejs/senti/services/engine/production
 ExecStart=/usr/bin/node server.js
-Environment=NODE_PORT=3007
+Environment=NODE_PORT=3009
 Environment=NODE_ENV=production
 Type=simple
 Restart=always
