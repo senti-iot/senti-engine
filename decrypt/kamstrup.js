@@ -1,9 +1,3 @@
-// const Buffer = require('buffer').default
-
-// const dataPacket = new Buffer.alloc(12,'C1FBF34FBB464A4D3456F747', 'hex')
-// const dataPacket2 = new Buffer.alloc(12,'C1FBF34FBB464A4D3456F757', 'hex')
-
-const key = new Buffer.from('74748073D776ECF7B6BD4AC99C18CD70', 'hex')
 const crc = require('crc/lib/crc16_xmodem');
 let crypto
 try {
@@ -21,7 +15,10 @@ const compareCRC = (crc, bits) => {
 		return false
 	}
 }
-const decryptMeter = (packet) => {
+const decryptMeter = (data) => {
+	
+	let packet = new Buffer.alloc(12, data, 'hex')
+	// console.log(packet)
 	let iv = new Buffer.alloc(16, packet.slice(1,2), 'hex')
     let decipher = crypto.createDecipheriv('aes-128-ctr', key, iv)
     let decrypted = decipher.update(packet.slice(2, packet.length))
@@ -37,7 +34,7 @@ const decryptMeter = (packet) => {
 	// console.log(last2[8].toString(16))
 	if(compareCRC(crc(bits).toString(16), vBits.toString('hex')))
 	{
-		return JSON.stringify({decrypted: decrypted.toString('hex')})
+		return JSON.stringify({data: decrypted.toString('hex')})
 	}
 	else {
 		return null
