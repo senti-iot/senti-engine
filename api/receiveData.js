@@ -1,8 +1,6 @@
 const express = require('express')
 const router = express.Router()
 const decryptMeter = require('../decrypt/kamstrup').decryptMeter
-// const verifyAPIVersion = require('senti-apicore').verifyapiversion
-// const { authenticate } = require('senti-apicore')
 
 router.post('/', (req, res) => {
 	let data = req.body.data
