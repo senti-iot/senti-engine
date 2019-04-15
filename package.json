@@ -1,13 +1,13 @@
 {
-	"name": "gateway",
-	"version": "0.0.4",
+	"name": "engine",
+	"version": "0.0.2",
 	"deprecated": false,
-	"description": "Senti Gateway service",
+	"description": "Senti Rules Engine Micro Service",
 	"main": "server.js",
 	"scripts": {},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/senti-iot/senti-gateway.git"
+		"url": "git+https://github.com/senti-iot/senti-engine.git"
 	},
 	"keywords": [
 		"Senti.Cloud",
@@ -15,8 +15,8 @@
 		"Senti",
 		"IoT",
 		"IoT platform",
-		"Gateway",
-		"Microgateway",
+		"Engine",
+		"Rules Engine",
 		"NodeJS",
 		"Express",
 		"Micro Service"
@@ -28,9 +28,9 @@
 	},
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/senti-iot/senti-gateway/issues"
+		"url": "https://github.com/senti-iot/senti-engine/issues"
 	},
-	"homepage": "https://github.com/senti-iot/senti-gateway#readme",
+	"homepage": "https://github.com/senti-iot/senti-engine#readme",
 	"dependencies": {
 		"apisauce": "^1.0.1",
 		"cors": "^2.8.5",
