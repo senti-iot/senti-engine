@@ -1,4 +1,5 @@
 const crc = require('crc/lib/crc16_xmodem');
+let key = process.env.MULTICAL;
 let crypto
 try {
     crypto = require('crypto')
