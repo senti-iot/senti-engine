@@ -21,7 +21,10 @@ const compareCRC = (crc, bits) => {
 		return false
 	}
 }
-const decryptMeter = (packet) => {
+const decryptMeter = (data) => {
+	
+	let packet = new Buffer.alloc(12, data, 'hex')
+	// console.log(packet)
 	let iv = new Buffer.alloc(16, packet.slice(1,2), 'hex')
     let decipher = crypto.createDecipheriv('aes-128-ctr', key, iv)
     let decrypted = decipher.update(packet.slice(2, packet.length))
@@ -37,7 +40,7 @@ const decryptMeter = (packet) => {
 	// console.log(last2[8].toString(16))
 	if(compareCRC(crc(bits).toString(16), vBits.toString('hex')))
 	{
-		return JSON.stringify({decrypted: decrypted.toString('hex')})
+		return JSON.stringify({data: decrypted.toString('hex')})
 	}
 	else {
 		return null
