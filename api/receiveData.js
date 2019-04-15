@@ -5,7 +5,7 @@ const decryptMeter = require('../decrypt/kamstrup').decryptMeter
 router.post('/', (req, res) => {
 	let data = req.body.data
 	let flag = req.body.flag
-	console.log(data, flag)
+	console.log(data)
 	if (flag === 1) {
 		let decrypted = decryptMeter(data)
 		if(decrypted){
