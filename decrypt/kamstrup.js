@@ -1,4 +1,5 @@
 const dotenv = require('dotenv').load();
+const dataPacket2 = new Buffer.from('8a8d08d5cd6c55fbb131423a','hex')
 const crc = require('crc/lib/crc16_xmodem');
 let key = new Buffer.from(process.env.MULTICAL, 'hex');
 let crypto
@@ -36,12 +37,13 @@ const decryptMeter = (data) => {
 	// console.log(last2[8].toString(16))
 	if(compareCRC(crc(bits).toString(16), vBits.toString('hex')))
 	{
-		return JSON.stringify({data: decrypted.toString('hex')})
+		console.log(decrypted)
+		return JSON.stringify({data: packet.slice(0,2).toString('hex')+decrypted.toString('hex')})
 	}
 	else {
 		return null
 	}
     // return {decrypted, crc: crc(bits).toString(16), vBits: vBits.toString('hex')}
 }
-// console.log(decryptMeter(dataPacket2))
+console.log(decryptMeter(dataPacket2))
 module.exports = { decryptMeter }
