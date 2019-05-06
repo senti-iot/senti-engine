@@ -154,8 +154,8 @@ const readableData = (packet) => {
 	// console.log(value * readablePacket.packinfo.scale)
 	readablePacket.rawFlow = flow
 	readablePacket.flow = flow * readablePacket.packinfo.scale
-	readableData.value = value * readablePacket.packinfo.scale
-	readableData.rawValue = value
+	readablePacket.value = value * readablePacket.packinfo.scale
+	readablePacket.rawValue = value
 	console.log(readablePacket)
 	return readablePacket 
 }
