@@ -13,6 +13,7 @@ function pad(size, string) {
   }
 function hex2bin(hex) {
 	let res = parseInt(hex, 16);	
+	// return res.toString(2)
 	return pad(4* hex.length, res.toString(2))
 }
 function bin2int(bin) {
@@ -37,6 +38,12 @@ const logs = [
 const packageTypes = [
 	"Info code, V1, Min flow",
 	"Info code, V1, Max flow",
+	'N/A',
+	'N/A',
+	'N/A',
+	'N/A',
+	'N/A',
+	'N/A',
 ]
 const readableData = (packet) => {
 	let readablePacket = {
@@ -62,6 +69,7 @@ const readableData = (packet) => {
 	// console.log(binPacket
 	// console.log(packet)
 	//Package INFO
+	console.log(hex2bin(packet.substr(0,2)))
 	let packID = hex2bin(packet.substr(0, 2))
 	// console.log(packID)
 	readablePacket.packinfo.scale = scales[bin2int(packID.substr(0, 2))]
@@ -71,6 +79,7 @@ const readableData = (packet) => {
 	readablePacket.packinfo.log = logs[bin2int(packID.substr(0, 1))]
 	packID = packID.substr(1, packID.length)
 	readablePacket.packinfo.packageType = packageTypes[bin2int(packID.substr(0, 3))]
+	console.log(packID.substr(0, 3))
 	// binPacket = binPacket.substr(16, binPacket.length)
 	// console.log(binPacket)
 	// console.log(readablePacket.packinfo)
@@ -79,6 +88,7 @@ const readableData = (packet) => {
 	//Info Codes
 	// console.log(packet.substr(8, 8))
 	let infoCodes = hex2bin(packet.substr(4, 4))
+	console.log(infoCodes)
 	// console.log(packet.substr(4, 4))
 	// console.log(infoCodes)
 	readablePacket.timeInfo.timeBurst = bin2int(infoCodes.substr(0, 3))
@@ -119,6 +129,7 @@ const readableData = (packet) => {
 	// console.log(value * readablePacket.packinfo.scale)
 	readablePacket.rawValue = value
 	readablePacket.value = value * readablePacket.packinfo.scale
+	console.log(readablePacket)
 	return readablePacket 
 }
 const compareCRC = (crc, bits) => {
@@ -152,11 +163,12 @@ const decryptMeter = (data) => {
 		console.log(decrypted)
 		readableData(packet.slice(0, 2).toString('hex') + decrypted.toString('hex'))
 		// return JSON.stringify({ data: packet.slice(0, 2).toString('hex') + decrypted.toString('hex') })
-		return JSON.stringify({data: readableData(packet.slice(0, 2).toString('hex') + decrypted.toString('hex'))})
+		return JSON.stringify(readableData(packet.slice(0, 2).toString('hex') + decrypted.toString('hex')))
 	}
 	else {
 		return null
 	}
 	// return {decrypted, crc: crc(bits).toString(16), vBits: vBits.toString('hex')}
 }
+console.log(decryptMeter('8a2412cc61997845cd8cad97'))
 module.exports = { decryptMeter }
