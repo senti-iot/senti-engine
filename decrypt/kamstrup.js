@@ -133,8 +133,19 @@ const readableData = (packet) => {
 	return readablePacket 
 }
 const compareCRC = (crc, bits) => {
-	let ncrc = crc.substr(2, 4) + crc.substr(0, 2)
-	console.log(ncrc, bits, ncrc === bits)
+	console.log(crc.toString(16))
+	let ncrc= null
+	if(crc.length !== 4){
+		console.log(crc.length)
+		ncrc = '0' + crc
+		ncrc = ncrc.substr(2, 4) + ncrc.substr(0, 2)
+		console.log(ncrc)
+
+	}
+	else {
+		ncrc = ncrc.substr(2, 4) + ncrc.substr(0, 2)
+	}
+	console.log(ncrc, bits, ncrc.toString(16) === bits)
 	if (ncrc === bits) {
 		return true
 	}
@@ -154,7 +165,7 @@ const decryptMeter = (data) => {
 	let vBits = decrypted.slice(8, 10) //last 2 bits
 	console.log(vBits)
 	console.log(bits.toString('hex'))
-	console.log(bits, crc(bits).toString(16))
+	console.log(bits, crc(bits).toString(2))
 
 	// let last2 = new Int8Array(toArrayBuffer(decrypted))
 	// console.log(last2)
@@ -170,5 +181,5 @@ const decryptMeter = (data) => {
 	}
 	// return {decrypted, crc: crc(bits).toString(16), vBits: vBits.toString('hex')}
 }
-console.log(decryptMeter('8a2412cc61997845cd8cad97'))
+console.log(decryptMeter('8a70df1e91f174612386fc4d'))
 module.exports = { decryptMeter }
