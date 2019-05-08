@@ -1,6 +1,6 @@
 const dotenv = require('dotenv').load();
 const crc = require('crc/lib/crc16_xmodem');
-let key = new Buffer.from(process.env.MULTICAL, 'hex');
+// let key = new Buffer.from(process.env.MULTICAL, 'hex');
 let crypto
 try {
 	crypto = require('crypto')
@@ -180,9 +180,10 @@ const compareCRC = (crc, bits) => {
 		return false
 	}
 }
-const decryptMeter = (data) => {
+const decryptMeter = (data, k) => {
 	let packet = new Buffer.alloc(12, data, 'hex')
 	// console.log(packet)
+	let key = new Buffer(k, 'hex')
 	let iv = new Buffer.alloc(16, packet.slice(1, 2), 'hex')
 	let decipher = crypto.createDecipheriv('aes-128-ctr', key, iv)
 	let decrypted = decipher.update(packet.slice(2, packet.length))
