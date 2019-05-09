@@ -9,9 +9,9 @@ try {
 }
 const reverseHex = (hex) => {
 	let nHex = hex.match(/.{1,2}/g);
-	console.log(nHex)
+	// console.log(nHex)
 	nHex = nHex.reverse().join('')
-	console.log(nHex)
+	// console.log(nHex)
 	return nHex
 }
 function pad(size, string) {
@@ -76,7 +76,7 @@ const readableData = (packet) => {
 	// console.log(binPacket
 	// console.log(packet)
 	//Package INFO
-	console.log(hex2bin(packet.substr(0,2)))
+	// console.log(hex2bin(packet.substr(0,2)))
 	let packID = hex2bin(packet.substr(0, 2))
 	// console.log(packID)
 	readablePacket.packinfo.scale = scales[bin2int(packID.substr(0, 2))]
@@ -86,7 +86,7 @@ const readableData = (packet) => {
 	readablePacket.packinfo.log = logs[bin2int(packID.substr(0, 1))]
 	packID = packID.substr(1, packID.length)
 	readablePacket.packinfo.packageType = packageTypes[bin2int(packID.substr(0, 3))]
-	console.log(packID.substr(0, 3))
+	// console.log(packID.substr(0, 3))
 	// binPacket = binPacket.substr(16, binPacket.length)
 	// console.log(binPacket)
 	// console.log(readablePacket.packinfo)
@@ -95,7 +95,7 @@ const readableData = (packet) => {
 	//Info Codes
 	// console.log(packet.substr(8, 8))
 	let infoCodes = hex2bin(packet.substr(4, 4))
-	console.log(infoCodes)
+	// console.log(infoCodes)
 	// console.log(packet.substr(4, 4))
 	// console.log(infoCodes)
 	readablePacket.timeInfo.timeBurst = bin2int(infoCodes.substr(0, 3))
@@ -140,9 +140,9 @@ const readableData = (packet) => {
 	// v1Values = v1Values.split('').reverse().join('')
 	// console.log(parseInt(v1Values, 10))
 	v1Values = hex2bin(reverseHex(v1Values))
-	console.log(bin2int(v1Values))
+	// console.log(bin2int(v1Values))
 	let value = bin2int(v1Values)
-	console.log(value)
+	// console.log(value)
 
 	let flow = packet.substr(16, 4)
 	flow = flow.substr(2,2)+flow.substr(0,2)
@@ -150,29 +150,29 @@ const readableData = (packet) => {
 	// console.log(flow)
 	// console.log(flow, packet.substr(16, 4))
 	flow = bin2int(flow)
-	console.log(value)
+	// console.log(value)
 	// console.log(value * readablePacket.packinfo.scale)
 	readablePacket.rawFlow = flow
 	readablePacket.flow = flow * readablePacket.packinfo.scale
 	readablePacket.value = value * readablePacket.packinfo.scale
 	readablePacket.rawValue = value
-	console.log(readablePacket)
+	// console.log(readablePacket)
 	return readablePacket 
 }
 const compareCRC = (crc, bits) => {
-	console.log(crc.toString(16))
+	// console.log(crc.toString(16))
 	let ncrc= null
 	if(crc.length !== 4){
-		console.log(crc.length)
+		// console.log(crc.length)
 		ncrc = '0' + crc
 		ncrc = ncrc.substr(2, 4) + ncrc.substr(0, 2)
-		console.log(ncrc)
+		// console.log(ncrc)
 
 	}
 	else {
 		ncrc = ncrc.substr(2, 4) + ncrc.substr(0, 2)
 	}
-	console.log(ncrc, bits, ncrc.toString(16) === bits)
+	// console.log(ncrc, bits, ncrc.toString(16) === bits)
 	if (ncrc === bits) {
 		return true
 	}
@@ -187,7 +187,7 @@ const decryptMeter = (data, k) => {
 	let iv = new Buffer.alloc(16, packet.slice(1, 2), 'hex')
 	let decipher = crypto.createDecipheriv('aes-128-ctr', key, iv)
 	let decrypted = decipher.update(packet.slice(2, packet.length))
-	console.log(packet.slice(0, 2).toString('hex') + decrypted.toString('hex'))
+	// console.log(packet.slice(0, 2).toString('hex') + decrypted.toString('hex'))
 	let bits = decrypted.slice(0, 8) //we need only bits 3-10
 	let vBits = decrypted.slice(8, 10) //last 2 bits
 	// console.log(vBits)
@@ -198,7 +198,7 @@ const decryptMeter = (data, k) => {
 	// console.log(last2)
 	// console.log(last2[8].toString(16))
 	if (compareCRC(crc(bits).toString(16), vBits.toString('hex'))) {
-		console.log(decrypted)
+		// console.log(decrypted)
 		readableData(packet.slice(0, 2).toString('hex') + decrypted.toString('hex'))
 		// return JSON.stringify({ data: packet.slice(0, 2).toString('hex') + decrypted.toString('hex') })
 		return JSON.stringify(readableData(packet.slice(0, 2).toString('hex') + decrypted.toString('hex')))
