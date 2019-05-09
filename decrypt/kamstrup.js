@@ -1,5 +1,6 @@
 const dotenv = require('dotenv').load();
 const crc = require('crc/lib/crc16_xmodem');
+const AES = require('./aesCTR')
 // let key = new Buffer.from(process.env.MULTICAL, 'hex');
 let crypto
 try {
@@ -160,10 +161,10 @@ const readableData = (packet) => {
 	return readablePacket 
 }
 const compareCRC = (crc, bits) => {
-	// console.log(crc.toString(16))
+	console.log(crc.toString(16), bits)
 	let ncrc = null
 	if(crc.length !== 4){
-		// console.log(crc.length)
+		console.log(crc.length)
 		ncrc = '0' + crc
 		ncrc = ncrc.substr(2, 4) + ncrc.substr(0, 2)
 		// console.log(ncrc)
@@ -174,7 +175,7 @@ const compareCRC = (crc, bits) => {
 		ncrc = ncrc.substr(2, 4) + ncrc.substr(0, 2)
 		
 	}
-	// console.log(ncrc, bits, ncrc.toString(16) === bits)
+	console.log(ncrc, bits, ncrc.toString(16) === bits)
 	if (ncrc === bits) {
 		return true
 	}
@@ -183,15 +184,23 @@ const compareCRC = (crc, bits) => {
 	}
 }
 const decryptMeter = (data, k) => {
+	// console.log(data)
 	let packet = new Buffer.alloc(12, data, 'hex')
-	// console.log(packet)
+	console.log(packet.toString('hex'))
 	let key = new Buffer(k, 'hex')
+	// console.log(key)
 	let iv = new Buffer.alloc(16, packet.slice(1, 2), 'hex')
-	let decipher = crypto.createDecipheriv('aes-128-ctr', key, iv)
-	let decrypted = decipher.update(packet.slice(2, packet.length))
+	console.log(iv.toString('hex'))
+	console.log(packet.slice(2, packet.length).toString('hex'))
+	// let decipher = crypto.createDecipheriv('aes-128-ctr', key, iv)
+	let decipher = new AES(packet.slice(2, packet.length), key, 16)
+	// let decrypted = decipher.update(packet.slice(2, packet.length))
+	let decrypted = decipher
+	console.log(decrypted)
+	// console.log(decrypted.toString('hex'))
 	// console.log(packet.slice(0, 2).toString('hex') + decrypted.toString('hex'))
-	let bits = decrypted.slice(0, 8) //we need only bits 3-10
-	let vBits = decrypted.slice(8, 10) //last 2 bits
+	// let bits = decrypted.slice(0, 8) //we need only bits 3-10
+	// let vBits = decrypted.slice(8, 10) //last 2 bits
 	// console.log(vBits)
 	// console.log(bits.toString('hex'))
 	// console.log(bits, crc(bits).toString(2))
@@ -199,6 +208,9 @@ const decryptMeter = (data, k) => {
 	// let last2 = new Int8Array(toArrayBuffer(decrypted))
 	// console.log(last2)
 	// console.log(last2[8].toString(16))
+	console.log(decrypted)
+	// console.log(vBits, bits)
+	// console.log(crc(bits).toString(16))
 	if (compareCRC(crc(bits).toString(16), vBits.toString('hex'))) {
 		// console.log(decrypted)
 		readableData(packet.slice(0, 2).toString('hex') + decrypted.toString('hex'))
@@ -210,6 +222,6 @@ const decryptMeter = (data, k) => {
 	}
 	// return {decrypted, crc: crc(bits).toString(16), vBits: vBits.toString('hex')}
 }
-// console.log(decryptMeter('c3017371cf338a6627f6e327', 'A42F0A5D5EAE79BC3D474808E7D4CAEA'))
-// console.log(decryptMeter('8aabcc68b5490300fbaeb195', '0B14D7B30B83D4456EFA0E10441DF3F9'))
+console.log(decryptMeter('c3017371cf338a6627f6e327', 'A42F0A5D5EAE79BC3D474808E7D4CAEA'))
+// decryptMeter('8aabcc68b5490300fbaeb195', '0B14D7B30B83D4456EFA0E10441DF3F9')
 module.exports = { decryptMeter }
