@@ -18,9 +18,9 @@ router.post('/', (req, res) => {
 			}
 			break;
 		case 2:
-			let decrypted = decryptTemperature(data)
-			if (decrypted) {
-				res.status(200).json(decrypted)
+			let decryptedTemp = decryptTemperature(data)
+			if (decryptedTemp) {
+				res.status(200).json(decryptedTemp)
 			}
 			else { 
 				res.status(400)
