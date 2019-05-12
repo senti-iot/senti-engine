@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const decryptMeter = require('../decrypt/kamstrup').decryptMeter
+const decryptTemperature = require('../decrypt/temperature').decryptTemperature
 
 router.post('/', (req, res) => {
 	let data = req.body.data
