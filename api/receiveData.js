@@ -8,8 +8,9 @@ router.post('/', (req, res) => {
 	let data = req.body.data
 	let key = req.body.key
 	let flag = req.body.flag
-	let deviceId = req.body.deviceId
+	let deviceId = req.body.device_id
 	let seq = req.body.seq
+	console.log(data, key, deviceId, seq, req.body)
 	console.log(data, key)
 	switch (flag) {
 		case 1:
