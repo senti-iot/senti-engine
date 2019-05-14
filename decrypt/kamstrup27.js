@@ -43,14 +43,14 @@ const logs = [
 	"hour"
 ]
 const packageTypes = [
-	{name: "Info code, V1, Min flow", id: 0},
-	{name: "Info code, V1, Max flow", id: 1},
-	{name: 'N/A', id: 2},
-	{name: 'N/A', id: 3},
-	{name: 'N/A', id: 4},
-	{name: 'N/A', id: 5},
-	{name: 'N/A', id: 6},
-	{name: 'N/A', id: 7},
+	{ name: "Info code, V1, Min flow", id: 0 },
+	{ name: "Info code, V1, Max flow", id: 1 },
+	{ name: 'N/A', id: 2 },
+	{ name: 'N/A', id: 3 },
+	{ name: 'N/A', id: 4 },
+	{ name: 'N/A', id: 5 },
+	{ name: 'N/A', id: 6 },
+	{ name: 'N/A', id: 7 },
 ]
 const infoCodes = (packet) => {
 	let timeInfo = {
@@ -105,7 +105,7 @@ const packInfo = (packet) => {
 const v1values = (packet) => {
 	let v1Values = packet.substr(8, 8)
 	console.log(v1Values)
-	v1Values = parseInt(reverseHex(v1Values),16)
+	v1Values = parseInt(reverseHex(v1Values), 16)
 	console.log(v1Values)
 
 	// console.log(value)
@@ -113,8 +113,8 @@ const v1values = (packet) => {
 }
 const maxFlow = (packet) => {
 	// let maxFlow = null
-	console.log(parseInt(reverseHex(packet),16))
-	return parseInt(reverseHex(packet),16)
+	console.log(parseInt(reverseHex(packet), 16))
+	return parseInt(reverseHex(packet), 16)
 }
 const temps = (packet) => {
 	return parseInt(packet, 16)
@@ -126,28 +126,31 @@ const readableData = (packet) => {
 	readablePacket.timeInfo = infoCodes(packet)
 	readablePacket.value = v1values(packet) * readablePacket.packinfo.scale
 	readablePacket.rawValue = v1values(packet)
-	
+
 	switch (readablePacket.packinfo.packageType.id) {
 		case 2:
-			readablePacket.maxFlow = maxFlow(packet.substr(20,4))
-			readablePacket.minFlow = maxFlow(packet.substr(16,4))
-		break;
+			readablePacket.maxFlow = maxFlow(packet.substr(20, 4))
+			readablePacket.minFlow = maxFlow(packet.substr(16, 4))
+			break;
 		case 3:
+			readablePacket.maxFlow = maxFlow(packet.substr(16, 4))
+			readablePacket.minATemp = temps(packet.substr(22, 2))
+			readablePacket.minWTemp = temps(packet.substr(20, 2))
 		case 4:
-			readablePacket.maxFlow = maxFlow(packet.substr(16,4))
-			readablePacket.minATemp = temps(packet.substr(22,2))
-			readablePacket.minWTemp = temps(packet.substr(20,2))
+			readablePacket.maxFlow = maxFlow(packet.substr(16, 4))
+			readablePacket.maxATemp = temps(packet.substr(22, 2))
+			readablePacket.minWTemp = temps(packet.substr(20, 2))
 		case 7:
-			readablePacket.minFlow= maxFlow(packet.substr(10,4))
-			readablePacket.maxFlow = maxFlow(packet.substr(14,4))
-			readablePacket.minWTemp = temps(packet.substr(16,2))
-			readablePacket.minATemp = temps(packet.substr(18,2))
-			readablePacket.maxATemp = temps(packet.substr(20,2))
-			readablePacket.battery = temps(packet.substr(22,2))
+			readablePacket.minFlow = maxFlow(packet.substr(10, 4))
+			readablePacket.maxFlow = maxFlow(packet.substr(14, 4))
+			readablePacket.minWTemp = temps(packet.substr(16, 2))
+			readablePacket.minATemp = temps(packet.substr(18, 2))
+			readablePacket.maxATemp = temps(packet.substr(20, 2))
+			readablePacket.battery = temps(packet.substr(22, 2))
 
 		default:
-		
-		break;
+
+			break;
 	}
 
 	return readablePacket
@@ -188,7 +191,7 @@ const decryptkamstrup27 = (data, k, deviceId, seq) => {
 	console.log(packet.slice(0, 2).toString('hex') + decrypted.toString('hex'))
 
 
-	return JSON.stringify(readableData(packet.slice(0, 2).toString('hex') + decrypted.toString('hex')))		
+	return JSON.stringify(readableData(packet.slice(0, 2).toString('hex') + decrypted.toString('hex')))
 }
 
 // {"lat": "56.0", "data": "c20113f565d1722e69a0bfe9", "long": "12.0", "rssi": "-123.00", "time": "1557371659", "type": "publish", "regID": "kamstrup-devices-591007aa", "seqnr": "154", "created": "2019-05-09 05:14", "regName": "kamstrup-devices-591007aa", "station": "2A7A", "version": "v1", "location": "europe", "serialnr": "7.72", "device_id": "7D6FF9", "customerID": "webhouse", "deviceName": "007D6FF9", "dataReceivedfrom": "backend.sigfox.com"}
