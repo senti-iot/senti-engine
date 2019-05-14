@@ -18,7 +18,7 @@ router.post('/', (req, res) => {
 				res.status(200).json(decrypted)
 			}
 			else {
-				res.status(400);
+				res.status(500);
 			}
 			break;
 		case 2:
@@ -27,10 +27,16 @@ router.post('/', (req, res) => {
 				res.status(200).json(decryptedTemp)
 			}
 			else { 
-				res.status(400)
+				res.status(500)
 			}
 		case 3: 
-			let decryptkamstrup27 = decryptkamstrup27(data, key, deviceId, seq)
+			let decryptKamstrup27 = decryptkamstrup27(data, key, deviceId, seq)
+			if(decryptKamstrup27){
+				res.status(200).json(decryptKamstrup27)
+			}
+			else {
+				res.status(500)
+			}
 		default:
 			break;
 	}
