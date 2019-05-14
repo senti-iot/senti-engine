@@ -178,7 +178,7 @@ const decryptkamstrup27 = (data, k, deviceId, seq) => {
 	console.log(packet.slice(0, 2).toString('hex') + decrypted.toString('hex'))
 
 
-	return readableData(packet.slice(0, 2).toString('hex') + decrypted.toString('hex'))
+	return JSON.stringify(readableData(packet.slice(0, 2).toString('hex') + decrypted.toString('hex')))
 }
 
 // {"lat": "56.0", "data": "c20113f565d1722e69a0bfe9", "long": "12.0", "rssi": "-123.00", "time": "1557371659", "type": "publish", "regID": "kamstrup-devices-591007aa", "seqnr": "154", "created": "2019-05-09 05:14", "regName": "kamstrup-devices-591007aa", "station": "2A7A", "version": "v1", "location": "europe", "serialnr": "7.72", "device_id": "7D6FF9", "customerID": "webhouse", "deviceName": "007D6FF9", "dataReceivedfrom": "backend.sigfox.com"}
