@@ -26,12 +26,13 @@ router.post('/', (req, res) => {
 			if (decryptedTemp) {
 				res.status(200).json(decryptedTemp)
 			}
-			else { 
+			else {
 				res.status(500)
 			}
-		case 3: 
+		case 3:
+			console.log(data, key, deviceId, seq)
 			let decryptKamstrup27 = decryptkamstrup27(data, key, deviceId, seq)
-			if(decryptKamstrup27){
+			if (decryptKamstrup27) {
 				res.status(200).json(decryptKamstrup27)
 			}
 			else {
