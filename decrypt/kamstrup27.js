@@ -169,7 +169,7 @@ let aesSeq = (aes, seq) => {
 const generateIV = (aes, seq, devId) => {
 	//0000000000 7CB33F 48 4B 48 4C 00 0A 61 45
 	let priv = devId + staticFillter + aesSeq(aes, seq)
-	console.log(priv, priv.length)
+	// console.log(priv, priv.length)
 	for (let index = priv.length; index < 32; index++) {
 		priv = '0' + priv
 	}
@@ -180,15 +180,15 @@ const generateIV = (aes, seq, devId) => {
 // console.log(generateIV())
 const decryptkamstrup27 = (data, k, deviceId, seq) => {
 	let packet = new Buffer.alloc(12, data, 'hex')
-	// console.log(packet)
+	console.log('PACKET', packet)
 	let key = new Buffer.alloc(16, k, 'hex')
-	// console.log(key)
+	console.log("KEY", key)
 	// let iv = new Buffer.alloc(16, packet.slice(1, 2), 'hex')
 	let iv = generateIV(packet.slice(1, 2).toString('hex'), seq, deviceId)
-	console.log(iv)
+	console.log("IV", iv)
 	let decipher = crypto.createDecipheriv('aes-128-ctr', key, iv)
 	let decrypted = decipher.update(packet.slice(2, packet.length))
-	console.log(packet.slice(0, 2).toString('hex') + decrypted.toString('hex'))
+	// console.log(packet.slice(0, 2).toString('hex') + decrypted.toString('hex'))
 
 
 	return JSON.stringify(readableData(packet.slice(0, 2).toString('hex') + decrypted.toString('hex')))
