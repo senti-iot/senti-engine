@@ -184,11 +184,14 @@ const compareCRC = (crc, bits) => {
 }
 const decryptMeter = (data, k) => {
 	let packet = new Buffer.alloc(12, data, 'hex')
-	// console.log(packet)
-	let key = new Buffer(k, 'hex')
+	console.log(packet)
+	let key = new Buffer.alloc(16,k, 'hex')
+	console.log(key)
 	let iv = new Buffer.alloc(16, packet.slice(1, 2), 'hex')
+	console.log(iv)
 	let decipher = crypto.createDecipheriv('aes-128-ctr', key, iv)
 	let decrypted = decipher.update(packet.slice(2, packet.length))
+	console.log(decrypted)
 	// console.log(packet.slice(0, 2).toString('hex') + decrypted.toString('hex'))
 	let bits = decrypted.slice(0, 8) //we need only bits 3-10
 	let vBits = decrypted.slice(8, 10) //last 2 bits
