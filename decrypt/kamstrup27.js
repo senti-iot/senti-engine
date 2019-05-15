@@ -136,10 +136,13 @@ const readableData = (packet) => {
 			readablePacket.maxFlow = maxFlow(packet.substr(16, 4))
 			readablePacket.minATemp = temps(packet.substr(22, 2))
 			readablePacket.minWTemp = temps(packet.substr(20, 2))
+			break;
+
 		case 4:
 			readablePacket.maxFlow = maxFlow(packet.substr(16, 4))
 			readablePacket.maxATemp = temps(packet.substr(22, 2))
 			readablePacket.minWTemp = temps(packet.substr(20, 2))
+			break;
 		case 7:
 			readablePacket.minFlow = maxFlow(packet.substr(10, 4))
 			readablePacket.maxFlow = maxFlow(packet.substr(14, 4))
@@ -147,7 +150,7 @@ const readableData = (packet) => {
 			readablePacket.minATemp = temps(packet.substr(18, 2))
 			readablePacket.maxATemp = temps(packet.substr(20, 2))
 			readablePacket.battery = temps(packet.substr(22, 2))
-
+			break;
 		default:
 
 			break;
@@ -196,8 +199,11 @@ const decryptkamstrup27 = (data, k, deviceId, seq) => {
 
 // {"lat": "56.0", "data": "c20113f565d1722e69a0bfe9", "long": "12.0", "rssi": "-123.00", "time": "1557371659", "type": "publish", "regID": "kamstrup-devices-591007aa", "seqnr": "154", "created": "2019-05-09 05:14", "regName": "kamstrup-devices-591007aa", "station": "2A7A", "version": "v1", "location": "europe", "serialnr": "7.72", "device_id": "7D6FF9", "customerID": "webhouse", "deviceName": "007D6FF9", "dataReceivedfrom": "backend.sigfox.com"}
 
+// {"data": "c3017f468d0b30c5b31097f5" "rssi": "-93.00", "time": "1557892062", "seqnr": "79"
+//
+console.log(decryptkamstrup27('c3017f468d0b30c5b31097f5','7A22F044949863676FFBEFC1BCC95A10' , '7D701D', 79))
 // cf0145fe61f4d32f0e594845 28AE94B65101DC46507101E6B0816167
-console.log(decryptkamstrup27('cf0145fe61f4d32f0e594845','28AE94B65101DC46507101E6B0816167', '7D70EA', '163'))
+// console.log(decryptkamstrup27('cf0145fe61f4d32f0e594845','28AE94B65101DC46507101E6B0816167', '7D70EA', '163'))
 module.exports = { decryptkamstrup27 }
 
 
