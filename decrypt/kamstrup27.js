@@ -34,7 +34,7 @@ const scales = [
 ]
 const units = [
 	"m3 & L/hr",
-	"ft3 & GPM",
+	"ft3 & GPM", 
 	"Gal & GPM",
 	"N/A"
 ]
@@ -94,8 +94,10 @@ const packInfo = (packet) => {
 	let packID = hex2bin(packet.substr(0, 2))
 
 	packinfo.scale = scales[bin2int(packID.substr(0, 2))]
+	console.log(packID.substr(0,2))
 	packID = packID.substr(2, packID.length)
 	packinfo.unit = units[bin2int(packID.substr(0, 2))]
+	console.log(packID.substr(0,2))
 	packID = packID.substr(2, packID.length)
 	packinfo.log = logs[bin2int(packID.substr(0, 1))]
 	packID = packID.substr(1, packID.length)
@@ -105,6 +107,7 @@ const packInfo = (packet) => {
 const v1values = (packet) => {
 	let v1Values = packet.substr(8, 8)
 	console.log(v1Values)
+	console.log(reverseHex(v1Values))
 	v1Values = parseInt(reverseHex(v1Values), 16)
 	console.log(v1Values)
 
@@ -126,6 +129,7 @@ const readableData = (packet) => {
 	readablePacket.timeInfo = infoCodes(packet)
 	readablePacket.value = v1values(packet) * readablePacket.packinfo.scale
 	readablePacket.rawValue = v1values(packet)
+	console.log(readablePacket.value, readablePacket.rawValue)
 
 	switch (readablePacket.packinfo.packageType.id) {
 		case 2:
@@ -162,7 +166,16 @@ const readableData = (packet) => {
 const staticFillter = '484B484C'
 
 let aesSeq = (aes, seq) => {
-	let endOfIv = aes + seq
+	let s = parseInt(seq,10).toString(16)
+	if(s.length < 3){
+		for (let index = s.length; index < 3; index++) {
+			s = '0' + s
+		}
+	}
+	console.log(s)
+	let endOfIv = aes + s
+	
+
 	for (let index = endOfIv.length; index < 8; index++) {
 		endOfIv = '0' + endOfIv
 	}
@@ -188,26 +201,14 @@ const decryptkamstrup27 = (data, k, deviceId, seq) => {
 	console.log("KEY", key)
 	// let iv = new Buffer.alloc(16, packet.slice(1, 2), 'hex')
 	let iv = generateIV(packet.slice(1, 2).toString('hex'), seq, deviceId)
-	console.log("IV", iv)
+	console.log("IV", iv.toString('hex'))
 	let decipher = crypto.createDecipheriv('aes-128-ctr', key, iv)
-	let decrypted = decipher.update(packet.slice(2, packet.length))
-	// console.log(packet.slice(0, 2).toString('hex') + decrypted.toString('hex'))
+	let decrypted = decipher.update(packet)
+	decrypted = decrypted.slice(2, decrypted.length)
 
 
 	return JSON.stringify(readableData(packet.slice(0, 2).toString('hex') + decrypted.toString('hex')))
 }
 
-// {"lat": "56.0", "data": "c20113f565d1722e69a0bfe9", "long": "12.0", "rssi": "-123.00", "time": "1557371659", "type": "publish", "regID": "kamstrup-devices-591007aa", "seqnr": "154", "created": "2019-05-09 05:14", "regName": "kamstrup-devices-591007aa", "station": "2A7A", "version": "v1", "location": "europe", "serialnr": "7.72", "device_id": "7D6FF9", "customerID": "webhouse", "deviceName": "007D6FF9", "dataReceivedfrom": "backend.sigfox.com"}
 
-// {"data": "c3017f468d0b30c5b31097f5" "rssi": "-93.00", "time": "1557892062", "seqnr": "79"
-//
-console.log(decryptkamstrup27('c3017f468d0b30c5b31097f5','7A22F044949863676FFBEFC1BCC95A10' , '7D701D', 79))
-// cf0145fe61f4d32f0e594845 28AE94B65101DC46507101E6B0816167
-// console.log(decryptkamstrup27('cf0145fe61f4d32f0e594845','28AE94B65101DC46507101E6B0816167', '7D70EA', '163'))
 module.exports = { decryptkamstrup27 }
-
-
-
-
-
-
