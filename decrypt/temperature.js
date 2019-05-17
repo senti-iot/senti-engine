@@ -11,4 +11,3 @@ const decryptTemperature = (packet) => {
 }
 
 module.exports = { decryptTemperature }
-// console.log(decryptTemperature("026f15"))
